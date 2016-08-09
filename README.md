@@ -31,6 +31,7 @@ Catnip currently supports Linux on x86 architectures.
 `udp -a 192.168.1.1 -p 7777`
 
 ## libcatnip API
+### TCP Sockets
 ##### Receive TCP messages
 ```c++
 char *h;
@@ -70,4 +71,39 @@ TCPSocket *tcp_receiver = tcp.accept();
 hSize = tcp_receiver->receive(qFile);
 free(h);
 delete(tcp_receiver);
+```
+### UDP Sockets
+##### Send a message over UDP
+```c++
+UDPSocket udp1;
+udp1.send("Hello UDP!\n", "127.0.0.1", 9997);
+```
+##### Receive a message over UDP
+```c++
+char * h;
+UDPSocket udp;
+udp.bind(9997);
+udp.receive(&h);
+free(h);
+```
+### Multicast Sockets
+##### Send a message over multicast
+```c++
+string maddr = "224.0.0.1";
+int mport = 8564;
+MulticastSocket mcast_sender;
+mcast_sender.send("Hello Multicast!", maddr.c_str(), mport);
+```
+
+##### Receive a multicast message
+```c++
+char *h;
+string maddr = "224.0.0.1";
+int mport = 8564;
+MulticastSocket mcast;
+mcast.subscribe(maddr.c_str());	
+mcast.bind(mport);
+mcast.receive(&h);
+printf("%s\n", h);
+free(h);
 ```
